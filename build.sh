@@ -19,6 +19,10 @@ cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 codesign --force --sign "${SIGN_IDENTITY:--}" "$APP"
 echo "Listo: $APP"
 
+rm -f build/NotBar.zip
+ditto -c -k --keepParent "$APP" build/NotBar.zip
+echo "Listo: build/NotBar.zip"
+
 if [[ "${1:-}" == "install" ]]; then
     pkill -x NotBar 2>/dev/null || true
     rm -rf /Applications/NotBar.app

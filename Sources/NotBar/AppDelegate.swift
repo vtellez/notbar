@@ -85,10 +85,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         menu.addItem(.separator())
 
-        let login = item("Abrir al iniciar sesión", #selector(toggleLaunchAtLogin))
-        login.state = Settings.launchAtLogin ? .on : .off
-        menu.addItem(login)
-
         let iconItem = NSMenuItem(title: "Icono de la barra", action: nil, keyEquivalent: "")
         let iconMenu = NSMenu()
         for (index, group) in MenuIcon.groups.enumerated() {
@@ -115,6 +111,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         colorItem.submenu = colorMenu
         menu.addItem(colorItem)
+
+        menu.addItem(.separator())
+
+        let login = item("Abrir al iniciar sesión", #selector(toggleLaunchAtLogin))
+        login.state = Settings.launchAtLogin ? .on : .off
+        menu.addItem(login)
 
         let dock = item("Ocultar icono del Dock", #selector(toggleDockIcon))
         dock.state = Settings.hideDockIcon ? .on : .off
