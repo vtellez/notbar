@@ -5,22 +5,26 @@
 <h1 align="center">NotBar</h1>
 
 <p align="center">
-  Un punto rojo en la barra de menús cuando alguna app del Dock tiene notificaciones.
+  Un icono en la barra de menús que se vuelve rojo cuando alguna app del Dock tiene notificaciones.
 </p>
 
 ---
 
 NotBar es una app mínima de macOS que vive en la barra de menús. Vigila los iconos
 del Dock y, cuando alguno muestra un badge (el globo rojo con el número de mensajes,
-correos, etc.), pone un **punto rojo** en su icono de la barra. Así lo ves aunque
+correos, etc.), pinta de **rojo** su icono de la barra. Así lo ves aunque
 tengas el Dock oculto o la app en otro escritorio.
 
 ## Funciones
 
-- Punto rojo en la barra de menús cuando hay alguna app con badge.
+- Icono de la barra liso (blanco o negro según el modo) sin notificaciones y entero en
+  rojo cuando hay alguna app con badge.
 - Lista de las apps con notificaciones y su contador; haz clic en una para abrirla.
-- **Icono de la barra** a elegir, todos rellenos y nítidos a cualquier resolución:
-  Cuadrícula (por defecto), App, Bandeja, Mensaje, Sobre o Punto.
+- **Icono de la barra** a elegir entre 25 símbolos rellenos y nítidos a cualquier
+  resolución: formas (punto, cuadrado, estrella, corazón…), comunicación (campana,
+  sobre, mensaje…) y otros (cuadrícula por defecto, bandera, rayo, huella…).
+- **Color de notificación** a elegir: rojo (por defecto), naranja, amarillo, verde,
+  menta, turquesa, azul, índigo, morado o rosa.
 - **Abrir al iniciar sesión**.
 - **Ocultar icono del Dock** (activado por defecto).
 - Se adapta al modo claro y oscuro.
@@ -63,6 +67,7 @@ Haz clic en el icono de la barra para abrir el menú:
 | --- | --- |
 | Lista de apps | Muestra las apps con badge y su contador. Clic para abrirla. |
 | Icono de la barra | Cambia el icono que se muestra en la barra de menús. |
+| Color de notificación | Color con el que se pinta el icono cuando hay notificaciones. |
 | Abrir al iniciar sesión | Arranca NotBar automáticamente al entrar en tu cuenta. |
 | Ocultar icono del Dock | Quita o muestra NotBar en el Dock. |
 | Salir de NotBar | Cierra la app (también con ⌘Q con el menú abierto). |
@@ -72,7 +77,7 @@ Haz clic en el icono de la barra para abrir el menú:
 Cada 2 segundos NotBar recorre los elementos de Accesibilidad del proceso del Dock
 (`com.apple.dock`). De cada icono de app (`AXApplicationDockItem`) lee el atributo
 `AXStatusLabel`, que contiene el texto del badge ("3", "•"…). Si alguno no está vacío,
-muestra el punto rojo. El código está en `Sources/NotBar/DockBadgeReader.swift`.
+pinta el icono de rojo. El código está en `Sources/NotBar/DockBadgeReader.swift`.
 
 `AXStatusLabel` no es una API documentada por Apple, así que una versión futura de
 macOS podría cambiarlo.
@@ -115,7 +120,7 @@ Resources/
 Sources/NotBar/
   AppDelegate.swift           Arranque, menú y comprobación periódica
   DockBadgeReader.swift       Lectura de los badges del Dock por Accesibilidad
-  StatusIcon.swift            Icono de la barra (SF Symbol + punto rojo)
+  StatusIcon.swift            Icono de la barra (SF Symbol) y color de notificación
   Settings.swift              Icono del Dock y abrir al iniciar sesión (SMAppService)
 ```
 

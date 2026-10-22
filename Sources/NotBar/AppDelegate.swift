@@ -51,7 +51,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let badged = !badgedApps.isEmpty
         guard badged != lastBadged else { return }
         lastBadged = badged
-        statusIcon.update(icon: MenuIcon.current, badged: badged)
+        updateIcon()
         statusItem.button?.toolTip = badged ? "Hay apps con notificaciones" : "Sin notificaciones"
     }
 
@@ -91,15 +91,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let iconItem = NSMenuItem(title: "Icono de la barra", action: nil, keyEquivalent: "")
         let iconMenu = NSMenu()
-        for icon in MenuIcon.allCases {
-            let option = item(icon.title, #selector(selectIcon(_:)))
-            option.representedObject = icon.rawValue
-            option.image = icon.menuImage
-            option.state = icon == MenuIcon.current ? .on : .off
-            iconMenu.addItem(option)
+        for (index, group) in MenuIcon.groups.enumerated() {
+            if index > 0 { iconMenu.addItem(.separator()) }
+            for icon in group {
+                let option = item(icon.title, #selector(selectIcon(_:)))
+                option.representedObject = icon.rawValue
+                option.image = icon.menuImage
+                option.state = icon == MenuIcon.current ? .on : .off
+                iconMenu.addItem(option)
+            }
         }
         iconItem.submenu = iconMenu
         menu.addItem(iconItem)
+
+        let colorItem = NSMenuItem(title: "Color de notificación", action: nil, keyEquivalent: "")
+        let colorMenu = NSMenu()
+        for color in BadgeColor.allCases {
+            let option = item(color.title, #selector(selectColor(_:)))
+            option.representedObject = color.rawValue
+            option.image = color.menuImage
+            option.state = color == BadgeColor.current ? .on : .off
+            colorMenu.addItem(option)
+        }
+        colorItem.submenu = colorMenu
+        menu.addItem(colorItem)
 
         let dock = item("Ocultar icono del Dock", #selector(toggleDockIcon))
         dock.state = Settings.hideDockIcon ? .on : .off
@@ -145,7 +160,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc private func selectIcon(_ sender: NSMenuItem) {
         guard let raw = sender.representedObject as? String, let icon = MenuIcon(rawValue: raw) else { return }
         MenuIcon.current = icon
-        statusIcon.update(icon: icon, badged: !badgedApps.isEmpty)
+        updateIcon()
+    }
+
+    @objc private func selectColor(_ sender: NSMenuItem) {
+        guard let raw = sender.representedObject as? String, let color = BadgeColor(rawValue: raw) else { return }
+        BadgeColor.current = color
+        updateIcon()
+    }
+
+    private func updateIcon() {
+        statusIcon.update(icon: MenuIcon.current, color: BadgeColor.current, badged: !badgedApps.isEmpty)
     }
 
     @objc private func toggleDockIcon() {
